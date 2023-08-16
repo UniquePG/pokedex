@@ -1,12 +1,14 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import './pokedetails.css'
 import usePokemonList from '../../Hooks/usePokemonList';
 import usePokemonDetails from '../../Hooks/usePokemonDetails';
-import useSimilarPokeData from '../../Hooks/useSimilarPokeData';
+import Pokemon from '../Pokemon/Pokemon';
 
-const PokeDetails = () => {
+
+
+const PokeDetails = ({pokemonName}) => {
 
     const { id } = useParams();     /* get each pokemon id from url */
 
@@ -40,14 +42,48 @@ const PokeDetails = () => {
     
 
 
-    const [ pokeDetails ] = usePokemonDetails(id)
+    const [ pokeDetails ] = usePokemonDetails(id, pokemonName)
 
-    // const [similarPokeData,similarpokePromise ] = useSimilarPokeData()
 
-    // console.log(similarpokePromise);
+    const { pokemonListState } = usePokemonList();
 
-    // console.log("pokemon details",pokeDetails.types);
-    // console.log("pokemon list state",pokemonListState);
+    // console.log("similar pokemons", pokeDetails.similarPokemons);
+    const [similarPokeData, setSimilarPokeData ] = useState({});
+    
+    async function downloadSimilarPokemon() {
+        console.log("similar pokemons", pokeDetails.similarPokemons);
+
+        const similarPokemons = pokeDetails.similarPokemons.map((p)=> axios.get(p.pokemon.url));
+
+        const similarpokemonResult = await axios.all(similarPokemons)
+
+        const similarPokeData = similarpokemonResult.map((poke)=> {
+            const similarPokemon = poke.data;
+
+            return {
+                id: similarPokemon.id,
+                name: similarPokemon.name,
+                image: (similarPokemon.sprites.other) ? similarPokemon.sprites.other.dream_world.front_default : similarPokemon.sprites.front_shiny
+            }
+        })
+
+        console.log("pokemon response", similarPokeData);
+
+        // now set this data into object of state variable
+        setSimilarPokeData({
+           pokemons: similarPokeData
+        }) 
+        
+    }
+
+    console.log("similar.....", similarPokeData.pokemons);
+
+    useEffect( ()=> {
+        downloadSimilarPokemon();
+        // console.log('similarrrr', similarPokeData.pokemons );
+    },[pokeDetails, id])
+
+
 
   return (
 <div>
@@ -64,24 +100,39 @@ const PokeDetails = () => {
                 <div className='poke-types'>                
                         {/* Pokemon-Type:  */}
                         {
-                            pokeDetails.types && pokeDetails.types.map( (t) => <div key={t}> {t} </div> )
+                            pokeDetails.types && pokeDetails.types.map((t, i) => <div key={i}> {t} </div> )
                         } 
                 </div>
 
             </div>   
     </div>
 
-{ pokeDetails.types && pokeDetails.similarPokemons &&
+{ pokeDetails.types && pokeDetails.similarPokemons && similarPokeData.pokemons &&
     <div>
-           <h2> some more {pokeDetails.types[0]} type pokemon </h2>
-           <div>
+           <h2 className='similar-poke-heading'> some more {pokeDetails.types[0]} type pokemon </h2>
+           {/* <div>
                 <ul>
                     {
                     pokeDetails.similarPokemons.map( (p, index)=> <li key={index} >{p.pokemon.name} </li> )
                     }
                 </ul>
+            </div> */}
 
-            </div>
+
+        <div className='pokemon-wrapper'>
+        
+            {
+                (pokemonListState.isLoading) ? 'Loading....' :  
+                similarPokeData.pokemons.map((p) => ( 
+                    <Pokemon name={p.name} image={p.image} key={p.id} id={p.id} /> 
+
+                ))
+                
+            }
+        
+        
+
+        </div>
     </div>
 
 }

@@ -1,21 +1,14 @@
-import axios from "axios";
-import usePokemonDetails from "./usePokemonDetails";
+// import usePokemonDetails from "./usePokemonDetails";
+
+// async function useSimilarPokeData() {
+    
+//     const [ similarPokemons ] = usePokemonDetails();
 
 
-async function useSimilarPokeData() {
 
-    const [ pokeDetails ] = usePokemonDetails();
+//    return {
+//     similarPokemons
+//    }
+// }
 
-    const similarpokePromise = pokeDetails.similarPokemons.map( (p)=> axios.get(p.pokemon.url))
-
-    const similarPokedata = await axios.all(similarpokePromise)
-
-    // console.log(similarPokedata);
-
-    return [
-        similarPokedata,
-        similarpokePromise
-    ]
-}
-
-export default useSimilarPokeData;
+// export default useSimilarPokeData;

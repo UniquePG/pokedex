@@ -88,7 +88,7 @@ const PokemonLIst = () => {
 
 //!3rd method (Use our custom hook)
          //* if we return in array then we accept it in the form of array
-    const { pokemonListState, setPokemonListState  } = usePokemonList(false);   
+    const { pokemonListState, setPokemonListState  } = usePokemonList();   
  
 
 

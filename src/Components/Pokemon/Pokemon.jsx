@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './pokemon.css'
 import { Link } from 'react-router-dom'
 
 const Pokemon = ({name, image, id}) => {
+
+
   return (
     <div className='pokemon'>
 

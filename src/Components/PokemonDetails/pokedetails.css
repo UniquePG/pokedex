@@ -9,6 +9,7 @@
     margin-top: 1rem;
     clip-path: polygon(0 0, 100% 0, 100% 87%, 66% 93%, 36% 86%, 0 97%);    
     background-color: rgb(132, 228, 228);
+    overflow: hidden;
 }
 
 .poke-img{
@@ -64,5 +65,10 @@
     margin-bottom: 20px;
     padding: 0.6rem;
     border-radius: 15px;
+}
+
+.similar-poke-heading{
+    text-align: center;
+    font-size: xx-large;
 }
 
