@@ -83,7 +83,7 @@ const usePokemonDetails = (id, pokemonName) => {
         downloadPokemon();
         
         // console.log('list', pokeDetails);
-    },[])
+    },[id])
 
 
     return [pokeDetails]
